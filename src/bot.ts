@@ -1,5 +1,6 @@
-import { Bot } from 'grammy';
+import { Bot, InputFile } from 'grammy';
 import 'dotenv/config';
+import path from 'node:path';
 
 const token = process.env.BOT_TOKEN;
 
@@ -14,9 +15,11 @@ export const bot = new Bot(token, {
 
 // logic – handle text messages via webhook
 bot.on('message:text', async (ctx) => {
-  await ctx.reply('Remainder bot is running');
+  const filePath = path.resolve(import.meta.dirname,'../public/output.webp');
+  await ctx.reply('Remainder bot is running 👷‍♂️');
   await ctx.react("🫡");
   await ctx.react("❤‍🔥");
+  await ctx.replyWithSticker(new InputFile(filePath))
 });
 
 export async function main() {
