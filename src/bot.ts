@@ -32,8 +32,9 @@ export async function main() {
   // Get the current time (UTC — Vercel runs in UTC)
   const current_time: Date = new Date();
 
+  // Check if current hour is 5 AM UTC or later
   if (current_time.getUTCHours() >= 5) {
-    // Calculate the remaining time until end of UTC day
+    // Calculate the end of the current day (23:59:59 UTC)
     const endOfDay = new Date(
       Date.UTC(
         current_time.getUTCFullYear(),
@@ -44,12 +45,14 @@ export async function main() {
         59,
       ),
     );
-    const remaining_time: number = (endOfDay.getTime() - current_time.getTime()) / 1000;
-    const remaining_hours: number = Math.floor(remaining_time / 3600);
-    const remaining_minutes: number = Math.floor((remaining_time % 3600) / 60);
-    const remaining_seconds: number = Math.floor(remaining_time % 60);
 
-    const message_text: string = `⏰ Daily Reminder!\n\nRemaining time for today: *${remaining_hours}h ${remaining_minutes}m ${remaining_seconds}s* ⌛\n\nMake every second count! 💪`;
+    // Calculate difference in milliseconds
+    const diffMs = endOfDay.getTime() - current_time.getTime();
+    
+    // Convert milliseconds to hours (Math.floor rounds down)
+    const remaining_hours = Math.floor(diffMs / (1000 * 60 * 60));
+
+    const message_text: string = `⏰ Daily Reminder!\n\nRemaining time for today: *${remaining_hours} hours* left ⌛\n\nMake every second count! 💪`;
 
     // Race the sendMessage against a 15-second timeout
     await Promise.race([
