@@ -46,23 +46,23 @@ export async function main() {
 
   // Check if current hour is 5 AM UTC or later
   if (current_hour >= 5) {
-    // Calculate the end of the current day (23:59:59 UTC)
-    const endOfDay = new Date(
+    // Calculate the start of the next day (00:00:00 UTC)
+    const nextDay = new Date(
       Date.UTC(
         current_time.getUTCFullYear(),
         current_time.getUTCMonth(),
-        current_time.getUTCDate(),
-        23,
-        59,
-        59,
+        current_time.getUTCDate() + 1, // next day
+        0,
+        0,
+        0,
       ),
     );
 
     // Calculate difference in milliseconds
-    const diffMs = endOfDay.getTime() - current_time.getTime();
+    const diffMs = nextDay.getTime() - current_time.getTime();
 
-    // Convert milliseconds to hours (Math.floor rounds down)
-    const remaining_hours = Math.floor(diffMs / (1000 * 60 * 60));
+    // Use Math.ceil so if there are 7.2 hours left, it says "8 hours" (counting the current hour)
+    const remaining_hours = Math.ceil(diffMs / (1000 * 60 * 60));
 
     const message_text: string = `⏰ Daily Reminder!\n\nRemaining time for today: *${remaining_hours} hours* left ⌛\n\nMake every second count! 💪`;
 
@@ -83,7 +83,7 @@ export async function main() {
       // console.log(`Sent message ${result.message_id}. Total stored: ${messages.length}`);
     } catch (error) {
       console.error('Error sending message:', error);
-    } 9
+    }
   } else {
     // Before 5 AM UTC → Delete all messages from the previous cycle
     const messages = store.get('messages') || [];
