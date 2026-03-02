@@ -19,7 +19,7 @@ export const bot = new Bot(token, {
   },
 });
 
-// file path
+// file path -> older version nodejs 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 //
@@ -40,34 +40,35 @@ export async function main() {
     return;
   }
 
-  // Get the current time (UTC — Vercel runs in UTC)
-  const current_time: Date = new Date();
-  const current_hour = current_time.getUTCHours();
+  // 1. Get current time in Indian Standard Time (IST)
+  const now = new Date();
+  const istDate = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+  const istHour = istDate.getHours();
 
-  // Check if current hour is 5 AM UTC or later
-  if (current_hour >= 5) {
-    // Calculate the start of the next day (00:00:00 UTC)
-    const nextDay = new Date(
-      Date.UTC(
-        current_time.getUTCFullYear(),
-        current_time.getUTCMonth(),
-        current_time.getUTCDate() + 1, // next day
-        0,
-        0,
-        0,
-      ),
-    );
+  // 2. Logic: Reminders run from 10 AM IST to Midnight IST
+  if (istHour >= 4) {
+    // Target is Midnight tonight in IST
+    const midnight = new Date(istDate);
+    midnight.setHours(24, 0, 0, 0);
 
-    // Calculate difference in milliseconds
-    const diffMs = nextDay.getTime() - current_time.getTime();
-
-    // Use Math.ceil so if there are 7.2 hours left, it says "8 hours" (counting the current hour)
+    const diffMs = midnight.getTime() - istDate.getTime();
     const remaining_hours = Math.ceil(diffMs / (1000 * 60 * 60));
 
     const message_text: string = `⏰ Daily Reminder!\n\nRemaining time for today: *${remaining_hours} hours* left ⌛\n\nMake every second count! 💪`;
 
-    // Race the sendMessage against a 15-second timeout
     try {
+      // Delete the previous reminder if it exists to keep the chat clean
+      const messages = store.get('messages') || [];
+      const previousMsgId = messages.pop();
+      if (previousMsgId) {
+        try {
+          await bot.api.deleteMessage(chatId, previousMsgId);
+        } catch (err) {
+          // Ignore if message already deleted or too old
+        }
+      }
+
+      // Race the sendMessage against a 15-second timeout
       const result = await Promise.race([
         bot.api.sendMessage(chatId, message_text, { parse_mode: 'Markdown' }),
         new Promise<never>((_, reject) =>
@@ -75,17 +76,15 @@ export async function main() {
         ),
       ]);
 
-      // Add message ID to store
-      const messages = store.get('messages') || [];
+      // Add new message ID to store
       messages.push(result.message_id);
       store.set('messages', messages);
 
-      // console.log(`Sent message ${result.message_id}. Total stored: ${messages.length}`);
     } catch (error) {
       console.error('Error sending message:', error);
     }
   } else {
-    // Before 5 AM UTC → Delete all messages from the previous cycle
+    // 3. Cleanup phase: Delete remaining messages from the previous day (runs before 10 AM IST)
     const messages = store.get('messages') || [];
     if (messages.length > 0) {
       console.log(`Cleanup phase: Deleting ${messages.length} messages...`);
