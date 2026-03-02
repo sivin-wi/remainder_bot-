@@ -16,7 +16,7 @@ export const bot = new Bot(token, {
 bot.on('message:text', async (ctx) => {
   await ctx.reply('Remainder bot is running');
   await ctx.react("🫡");
-  await ctx.react("❤‍🔥")
+  await ctx.react("❤‍🔥");
 });
 
 export async function main() {
