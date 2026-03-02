@@ -1,6 +1,6 @@
 import { Bot, InputFile } from 'grammy';
 import 'dotenv/config';
-import path from 'node:path';
+import path from 'path';
 
 const token = process.env.BOT_TOKEN;
 
@@ -17,10 +17,10 @@ export const bot = new Bot(token, {
 bot.on('message:text', async (ctx) => {
   const filePath = path.resolve(import.meta.dirname,'../public/output.webp');
   await ctx.reply('Remainder is running ✅');
-  await ctx.react("🫡");
   await ctx.react("❤‍🔥");
   await ctx.replyWithSticker(new InputFile(filePath));
 });
+
 
 export async function main() {
   const chatId = process.env.CHAT_ID;
