@@ -1,6 +1,8 @@
 import { Bot, InputFile } from 'grammy';
 import 'dotenv/config';
 import path from 'path';
+import {fileURLToPath} from  'url';
+import {dirname,join} from 'path'
 
 const token = process.env.BOT_TOKEN;
 
@@ -13,9 +15,15 @@ export const bot = new Bot(token, {
   },
 });
 
+// file path
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+//
+
 // logic – handle text messages via webhook
 bot.on('message:text', async (ctx) => {
-  const filePath = path.resolve(import.meta.dirname,'../public/output.webp');
+  //const filePath = path.resolve(import.meta.dirname,'../public/output.webp'); // latest node (navigator)
+  const filePath =   join(__dirname,'../public/output.webp') // relative path eg: web app service like  railway, docker
   await ctx.reply('Remainder is running ✅');
   await ctx.react("❤‍🔥");
   await ctx.replyWithSticker(new InputFile(filePath));
@@ -64,3 +72,4 @@ export async function main() {
   }
   // Before hour 5 UTC → silently skip
 }
+
