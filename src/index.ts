@@ -2,7 +2,9 @@ import 'dotenv/config';
 import cron from 'node-cron';
 import { main, bot } from './bot.js';
 
-console.log('Starting Habit Reminder Bot...');
+// ── Webhook for serverless ────────────────────────────────────────────────────
+// // serverless
+// import { webhookCallback } from 'grammy'; 
 
 // app.post('/webhook', webhookCallback(bot, 'express')); // serverless
 
