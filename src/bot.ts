@@ -14,7 +14,9 @@ export const bot = new Bot(token, {
 
 // logic – handle text messages via webhook
 bot.on('message:text', async (ctx) => {
-  await ctx.reply('hello');
+  await ctx.reply('Remainder bot is running');
+  await ctx.react("🫡");
+  await ctx.react("❤‍🔥")
 });
 
 export async function main() {
