@@ -16,10 +16,10 @@ export const bot = new Bot(token, {
 // logic – handle text messages via webhook
 bot.on('message:text', async (ctx) => {
   const filePath = path.resolve(import.meta.dirname,'../public/output.webp');
-  await ctx.reply('Remainder bot is running 👷‍♂️');
+  await ctx.reply('Remainder is running ✅');
   await ctx.react("🫡");
   await ctx.react("❤‍🔥");
-  await ctx.replyWithSticker(new InputFile(filePath))
+  await ctx.replyWithSticker(new InputFile(filePath));
 });
 
 export async function main() {
