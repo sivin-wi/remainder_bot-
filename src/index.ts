@@ -17,7 +17,7 @@ cron.schedule('0 * * * *', async () => {
    } catch (error: any) {
       console.error('Cron error:', error.message);
    }
-}, { timezone: 'UTC' });
+}, {  timezone: "Asia/Kolkata"  });
 
 // ── Start bot with long polling ───────────────────────────────────────────────
 // Long polling: bot continuously asks Telegram for new messages
