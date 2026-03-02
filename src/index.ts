@@ -9,7 +9,7 @@ console.log('Starting Habit Reminder Bot...');
 // ── Daily reminder cron job ───────────────────────────────────────────────────
 // Runs every day at 8:00 AM IST (2:30 AM UTC)
 // Change the time here if needed: 'minute hour * * *'
-cron.schedule('30 2 * * *', async () => {
+cron.schedule('0 * * * *', async () => {
    console.log(`[${new Date().toISOString()}] Running daily reminder...`);
    try {
       await main();
