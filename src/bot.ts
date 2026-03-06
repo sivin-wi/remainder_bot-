@@ -59,10 +59,10 @@ export async function main() {
     try {
       // Delete the previous reminder if it exists to keep the chat clean
       const messages = store.get('messages') || [];
-      const previousMsgId = messages.pop();
-      if (previousMsgId) {
+      // const previousMsgId = messages.pop();
+      if (Array.isArray(messages) && messages.length) {
         try {
-          await bot.api.deleteMessage(chatId, previousMsgId);
+          await bot.api.deleteMessages(chatId, messages);
         } catch (err) {
           // Ignore if message already deleted or too old
         }
