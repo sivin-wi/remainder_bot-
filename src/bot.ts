@@ -69,8 +69,11 @@ export async function main() {
       }
 
       // Race the sendMessage against a 15-second timeout
+      // file path
+      const filePath = path.join(__dirname,'../public/output.webp')
       const result = await Promise.race([
         bot.api.sendMessage(chatId, message_text, { parse_mode: 'Markdown' }),
+        bot.api.sendSticker(chatId,new InputFile(filePath),{protect_content: true}),
         new Promise<never>((_, reject) =>
           setTimeout(() => reject(new Error('Telegram API timeout after 15s')), 15000),
         ),
