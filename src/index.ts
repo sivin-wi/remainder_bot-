@@ -10,7 +10,7 @@ import { main, bot } from './bot.js';
 
 // ── Daily reminder cron job ───────────────────────────────────────────────────
 cron.schedule('0 * * * *', async () => {
-   console.log(`[${new Date().toISOString()}] Running daily reminder...`);
+  // console.log(`[${new Date().toISOString()}] Running daily reminder...`);
    try {
       await main();
       console.log('Daily reminder sent successfully.');
@@ -25,3 +25,4 @@ cron.schedule('0 * * * *', async () => {
 bot.start({
    onStart: () => console.log('Bot is running with long polling ✅'),
 });
+

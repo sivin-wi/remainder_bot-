@@ -54,7 +54,7 @@ export async function main() {
     const diffMs = midnight.getTime() - istDate.getTime();
     const remaining_hours = Math.ceil(diffMs / (1000 * 60 * 60));
 
-    const message_text: string = `⏰ Daily Reminder!\n\nRemaining time for today: *${remaining_hours} hours* left ⌛\n\nMake every second count! 💪`;
+    const message_text: string = `⏰ Daily Reminder!\n\nRemaining time for today: *${remaining_hours} hours* left ⌛\n\nMake every second count! 💪 Day: ${istDate.toLocaleString()}`;
 
     try {
       // Delete the previous reminder if it exists to keep the chat clean
